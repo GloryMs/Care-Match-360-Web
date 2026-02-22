@@ -1,0 +1,298 @@
+{
+  "brand": {
+    "name": "CareMatch360",
+    "tagline": "Care that fits. Life that continues.",
+    "description": "Connecting elderly patients with the right care providers through intelligent matching."
+  },
+  "nav": {
+    "features": "Features",
+    "howItWorks": "How it Works",
+    "plans": "Plans",
+    "about": "About",
+    "login": "Sign In",
+    "register": "Get Started",
+    "dashboard": "Dashboard",
+    "profile": "My Profile",
+    "matches": "Matches",
+    "offers": "Offers",
+    "subscription": "Subscription",
+    "invoices": "Invoices",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "logout": "Sign Out"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Trusted by 2,500+ families",
+      "title": "Finding the right care",
+      "titleAccent": "shouldn't be hard.",
+      "subtitle": "CareMatch360 connects elderly patients with verified residential and ambulatory care providers using an intelligent matching algorithm — personalized, transparent, and compassionate.",
+      "ctaPatient": "Find Care for a Loved One",
+      "ctaProvider": "I'm a Care Provider",
+      "stats": {
+        "providers": "Verified Providers",
+        "matches": "Successful Matches",
+        "families": "Families Helped",
+        "satisfaction": "Satisfaction Rate"
+      }
+    },
+    "features": {
+      "title": "Everything you need",
+      "subtitle": "in one place",
+      "description": "From initial assessment to signed care agreement, CareMatch360 handles every step of the care-finding journey.",
+      "items": {
+        "matching": {
+          "title": "Intelligent Matching",
+          "desc": "Our algorithm considers care level, location, specializations, and lifestyle preferences to find the best-fit providers."
+        },
+        "transparency": {
+          "title": "Full Transparency",
+          "desc": "View staff stability, continuity ratios, and family communication scores — not just glossy brochures."
+        },
+        "offers": {
+          "title": "Direct Offers",
+          "desc": "Providers send personalized care offers directly to patients. Accept, decline, or compare — at your own pace."
+        },
+        "secure": {
+          "title": "Privacy First",
+          "desc": "GDPR-compliant, EU-hosted data. Your medical information is encrypted and only shared with your consent."
+        },
+        "multilingual": {
+          "title": "Multi-language Support",
+          "desc": "Available in German, English, and Arabic — because good care transcends language barriers."
+        },
+        "billing": {
+          "title": "Simple Billing",
+          "desc": "Transparent subscription plans for providers. Patients always use the platform for free."
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "steps": {
+        "1": { "title": "Create Your Profile", "desc": "Tell us about the care needs, location, lifestyle preferences, and medical requirements." },
+        "2": { "title": "Get Matched", "desc": "Our engine instantly calculates compatibility scores across all verified providers in your region." },
+        "3": { "title": "Receive Offers", "desc": "Providers send personalized care proposals directly to you. Compare side by side." },
+        "4": { "title": "Start Care", "desc": "Accept an offer and begin your care journey with full digital record keeping." }
+      }
+    },
+    "plans": {
+      "title": "Simple, transparent pricing",
+      "subtitle": "For care providers. Patients always join free.",
+      "trial": "14-day free trial on all plans",
+      "monthly": "/ month",
+      "choosePlan": "Choose Plan",
+      "popular": "Most Popular",
+      "basic": {
+        "name": "Basic",
+        "price": "49.99",
+        "feature1": "Up to 10 offers/month",
+        "feature2": "Basic profile visibility",
+        "feature3": "Email support"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "99.99",
+        "feature1": "Unlimited offers",
+        "feature2": "Enhanced visibility",
+        "feature3": "Analytics dashboard",
+        "feature4": "Priority email support"
+      },
+      "premium": {
+        "name": "Premium",
+        "price": "199.99",
+        "feature1": "Unlimited offers",
+        "feature2": "Maximum visibility",
+        "feature3": "Advanced analytics",
+        "feature4": "Dedicated account manager",
+        "feature5": "24/7 phone support"
+      }
+    },
+    "cta": {
+      "title": "Ready to find the right care?",
+      "subtitle": "Join thousands of families who found peace of mind with CareMatch360.",
+      "button": "Start for Free"
+    },
+    "footer": {
+      "rights": "All rights reserved.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "contact": "Contact"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your CareMatch360 account",
+      "email": "Email address",
+      "password": "Password",
+      "forgot": "Forgot password?",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUp": "Create one",
+      "twoFactor": "Two-factor code",
+      "twoFactorHint": "Enter the 6-digit code from your authenticator app"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Join CareMatch360 today",
+      "email": "Email address",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "role": "I am registering as...",
+      "submit": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "passwordHint": "Minimum 8 characters",
+      "roles": {
+        "PATIENT": "Patient — I'm looking for care",
+        "RELATIVE": "Relative / Guardian — Managing care for someone",
+        "RESIDENTIAL_PROVIDER": "Residential Care Provider",
+        "AMBULATORY_PROVIDER": "Ambulatory Care Provider"
+      },
+      "agreeToTerms": "I agree to the",
+      "terms": "Terms of Service",
+      "and": "and",
+      "privacy": "Privacy Policy"
+    },
+    "verify": {
+      "title": "Check your email",
+      "subtitle": "We've sent a verification link to",
+      "instruction": "Click the link in the email to activate your account.",
+      "resend": "Resend verification email",
+      "resendSuccess": "Verification email resent!",
+      "backToLogin": "Back to Sign In",
+      "verified": "Email verified!",
+      "verifiedDesc": "Your account is now active. You can sign in.",
+      "invalidToken": "This verification link is invalid or has expired.",
+      "verifying": "Verifying your email..."
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "subtitle": "Enter your email and we'll send you a reset link.",
+      "email": "Email address",
+      "submit": "Send Reset Link",
+      "sent": "Reset link sent!",
+      "sentDesc": "Check your inbox for the password reset link.",
+      "backToLogin": "Back to Sign In"
+    },
+    "reset": {
+      "title": "Set new password",
+      "subtitle": "Enter your new password below.",
+      "password": "New password",
+      "confirmPassword": "Confirm new password",
+      "submit": "Reset Password",
+      "success": "Password reset successfully!",
+      "successDesc": "You can now sign in with your new password.",
+      "backToLogin": "Go to Sign In",
+      "invalidToken": "This reset link is invalid or has expired."
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password.",
+      "emailNotVerified": "Please verify your email before signing in.",
+      "accountDisabled": "This account has been disabled.",
+      "emailTaken": "An account with this email already exists.",
+      "passwordMismatch": "Passwords do not match.",
+      "weakPassword": "Password must be at least 8 characters.",
+      "invalidEmail": "Please enter a valid email address.",
+      "required": "This field is required.",
+      "network": "Network error. Please try again."
+    }
+  },
+  "dashboard": {
+    "patient": {
+      "title": "Your Care Dashboard",
+      "subtitle": "Track your matches, offers, and care journey",
+      "stats": {
+        "matches": "Active Matches",
+        "pendingOffers": "Pending Offers",
+        "acceptedOffers": "Accepted Offers",
+        "profileComplete": "Profile Complete"
+      },
+      "recentMatches": "Top Matches",
+      "recentOffers": "Recent Offers",
+      "completeProfile": "Complete your profile to get better matches",
+      "completeProfileBtn": "Complete Profile",
+      "noMatches": "No matches yet. Complete your profile to start matching.",
+      "noOffers": "No offers received yet.",
+      "matchScore": "Match Score",
+      "viewAll": "View All"
+    },
+    "provider": {
+      "title": "Provider Dashboard",
+      "subtitle": "Manage your patients and care offers",
+      "stats": {
+        "activePlan": "Active Plan",
+        "offersThisMonth": "Offers This Month",
+        "acceptedOffers": "Accepted Offers",
+        "matchesFound": "New Matches"
+      },
+      "recentMatches": "Recent Patient Matches",
+      "sentOffers": "Sent Offers",
+      "upgradePrompt": "Upgrade to send unlimited offers",
+      "upgradeBtn": "View Plans",
+      "noMatches": "No patient matches yet.",
+      "noOffers": "No offers sent yet.",
+      "sendOffer": "Send Offer"
+    },
+    "admin": {
+      "title": "Platform Overview",
+      "subtitle": "Monitor and manage CareMatch360",
+      "stats": {
+        "totalUsers": "Total Users",
+        "activeUsers": "Active Users",
+        "totalMatches": "Total Matches",
+        "totalOffers": "Total Offers",
+        "subscriptions": "Active Subscriptions"
+      },
+      "eventCounts": "Event Activity",
+      "recentActivity": "Recent Activity"
+    },
+    "relative": {
+      "title": "Care Management",
+      "subtitle": "Manage care for your loved one"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "viewAll": "View All",
+    "noData": "No data available",
+    "comingSoon": "Coming Soon",
+    "copyRight": "© 2026 CareMatch360"
+  },
+  "theme": {
+    "dark": "Dark Mode",
+    "light": "Light Mode",
+    "green": "Green Theme",
+    "blue": "Blue Theme"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "de": "Deutsch",
+    "ar": "العربية"
+  },
+  "offers": {
+    "status": {
+      "DRAFT": "Draft",
+      "SENT": "Sent",
+      "VIEWED": "Viewed",
+      "ACCEPTED": "Accepted",
+      "REJECTED": "Declined",
+      "EXPIRED": "Expired"
+    }
+  }
+}
