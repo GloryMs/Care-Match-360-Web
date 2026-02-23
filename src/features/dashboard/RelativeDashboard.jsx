@@ -40,14 +40,14 @@ const MOCK_OFFERS = [
 ];
 
 const MOCK_ACTIVITY = [
-  { id: 1, text: 'New offer received from Sonnengarten',     time: '2 hours ago',   icon: FileText,    color: '#2563eb' },
+  { id: 1, text: 'New offer received from Sonnengarten',     time: '2 hours ago',   icon: FileText,    color: '#4a7a8a' },
   { id: 2, text: 'Match score updated for Heinrich',        time: 'Yesterday',     icon: Sparkles,    color: 'var(--primary-600)' },
   { id: 3, text: 'Profile information updated',             time: '3 days ago',    icon: User,        color: '#7c3aed' },
   { id: 4, text: 'Mobile Care Plus offer accepted',         time: '4 days ago',    icon: CheckCircle2, color: '#16a34a' },
 ];
 
 const STATUS_CONFIG = {
-  SENT:     { icon: Bell,          color: '#2563eb', bg: '#eff6ff',  label: 'Received' },
+  SENT:     { icon: Bell,          color: '#4a7a8a', bg: '#f0f6f8',  label: 'Received' },
   VIEWED:   { icon: Activity,      color: '#d97706', bg: '#fffbeb',  label: 'Viewed' },
   ACCEPTED: { icon: CheckCircle2,  color: '#16a34a', bg: '#f0fdf4',  label: 'Accepted' },
   REJECTED: { icon: XCircle,       color: '#dc2626', bg: '#fef2f2',  label: 'Declined' },
@@ -301,7 +301,7 @@ export default function RelativeDashboard() {
             <div className="flex flex-col gap-2">
               {[
                 { to: '/matches',       icon: Sparkles,  label: 'Find More Providers',  color: 'var(--primary-600)' },
-                { to: '/offers',        icon: FileText,  label: 'Manage All Offers',    color: '#2563eb' },
+                { to: '/offers',        icon: FileText,  label: 'Manage All Offers',    color: '#4a7a8a' },
                 { to: '/profile',       icon: User,      label: "Update Heinrich's Profile", color: '#7c3aed' },
                 { to: '/notifications', icon: Bell,      label: 'Notifications',        color: '#d97706' },
               ].map((item) => (

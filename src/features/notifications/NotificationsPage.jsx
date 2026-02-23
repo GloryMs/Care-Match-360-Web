@@ -5,7 +5,7 @@ import { Bell, CheckCheck, Sparkles, FileText, CreditCard, AlertCircle, Info, Ch
 
 const MOCK_NOTIFS = [
   { id:'n1', type:'IN_APP', title:'New match found!',               body:'Sonnengarten Pflegeheim matches your profile with a score of 91%.', createdAt:'2026-02-22T10:00:00', read:false, icon:Sparkles,  color:'var(--primary-600)' },
-  { id:'n2', type:'IN_APP', title:'Offer received',                  body:'Mobile Care Plus sent you a personalized care offer.',              createdAt:'2026-02-22T08:30:00', read:false, icon:FileText,  color:'#2563eb' },
+  { id:'n2', type:'IN_APP', title:'Offer received',                  body:'Mobile Care Plus sent you a personalized care offer.',              createdAt:'2026-02-22T08:30:00', read:false, icon:FileText,  color:'#4a7a8a' },
   { id:'n3', type:'IN_APP', title:'Offer accepted',                  body:'Your offer to Patient #A-1038 was accepted.',                       createdAt:'2026-02-21T14:00:00', read:false, icon:Check,     color:'#16a34a' },
   { id:'n4', type:'IN_APP', title:'Subscription renewed',            body:'Your Pro plan has been renewed for another month. Invoice available.', createdAt:'2026-02-20T09:00:00', read:true, icon:CreditCard, color:'#d97706' },
   { id:'n5', type:'IN_APP', title:'Profile update reminder',         body:'Your profile is 65% complete. Add lifestyle info to get better matches.', createdAt:'2026-02-19T11:00:00', read:true, icon:Info,   color:'#7c3aed' },

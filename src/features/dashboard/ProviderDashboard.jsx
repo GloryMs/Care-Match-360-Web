@@ -31,7 +31,7 @@ const MOCK_SUBSCRIPTION = { tier: 'PRO', status: 'ACTIVE', offersUsed: 7, offers
 
 const STATUS_CONFIG = {
   DRAFT:    { icon: Clock,        color: '#6b7280', bg: '#f3f4f6', label: 'Draft' },
-  SENT:     { icon: Send,         color: '#2563eb', bg: '#eff6ff', label: 'Sent' },
+  SENT:     { icon: Send,         color: '#4a7a8a', bg: '#f0f6f8', label: 'Sent' },
   VIEWED:   { icon: Activity,     color: '#d97706', bg: '#fffbeb', label: 'Viewed' },
   ACCEPTED: { icon: CheckCircle2, color: '#16a34a', bg: '#f0fdf4', label: 'Accepted' },
   REJECTED: { icon: XCircle,      color: '#dc2626', bg: '#fef2f2', label: 'Rejected' },
@@ -201,7 +201,7 @@ export default function ProviderDashboard() {
                   <div className="flex flex-col items-end gap-2">
                     {m.offerSent ? (
                       <span className="text-xs px-2 py-1 rounded-full font-medium"
-                        style={{ background: '#eff6ff', color: '#2563eb' }}>
+                        style={{ background: '#f0f6f8', color: '#4a7a8a' }}>
                         Offer Sent
                       </span>
                     ) : (
@@ -327,7 +327,7 @@ export default function ProviderDashboard() {
           >
             <SectionHeader title="Offer Funnel" />
             <div className="flex flex-col gap-3">
-              <MiniBar label="Sent"     value={4}  max={10} color="#3b82f6" />
+              <MiniBar label="Sent"     value={4}  max={10} color="#5A8FA0" />
               <MiniBar label="Viewed"   value={3}  max={10} color="#f59e0b" />
               <MiniBar label="Accepted" value={1}  max={10} color="var(--primary-500)" />
               <MiniBar label="Rejected" value={1}  max={10} color="#ef4444" />
@@ -340,7 +340,7 @@ export default function ProviderDashboard() {
             <div className="flex flex-col gap-2">
               {[
                 { to: '/matches',      icon: Sparkles,  label: 'Find Patients',        color: 'var(--primary-600)' },
-                { to: '/offers',       icon: Send,      label: 'Manage Offers',        color: '#2563eb' },
+                { to: '/offers',       icon: Send,      label: 'Manage Offers',        color: '#4a7a8a' },
                 { to: '/subscription', icon: CreditCard, label: 'Upgrade Plan',        color: '#d97706' },
                 { to: '/invoices',     icon: FileText,  label: 'View Invoices',        color: '#7c3aed' },
               ].map((item) => (

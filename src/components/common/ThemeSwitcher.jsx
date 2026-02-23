@@ -62,7 +62,7 @@ export default function ThemeSwitcher({ className }) {
             onClick={() => { setColor('blue'); setOpen(false); }}
             className="flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors hover:bg-[color:var(--bg-subtle)] text-[color:var(--text-main)]"
           >
-            <span className="w-4 h-4 rounded-full bg-blue-500 flex-shrink-0" />
+            <span className="w-4 h-4 rounded-full flex-shrink-0" style={{background:"#5A8FA0"}} />
             <span className="font-medium flex-1 text-start">{t('theme.blue')}</span>
             {colorScheme === 'blue' && <Check size={14} className="text-[color:var(--primary-600)]" />}
           </button>

@@ -19,7 +19,7 @@ export const useToast = () => ({
   info: (msg, opts) =>
     toast(msg, {
       icon: 'ℹ️',
-      style: { background: '#3b82f6', color: '#fff', borderRadius: '12px', fontWeight: 600 },
+      style: { background: '#5A8FA0', color: '#fff', borderRadius: '12px', fontWeight: 600 },
       ...opts,
     }),
 

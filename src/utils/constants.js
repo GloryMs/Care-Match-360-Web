@@ -28,7 +28,7 @@ export const OFFER_STATUS = {
 
 export const OFFER_STATUS_STYLES = {
   DRAFT:    { bg: 'bg-gray-100 dark:bg-gray-800',   text: 'text-gray-600 dark:text-gray-400'  },
-  SENT:     { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-700 dark:text-blue-300'  },
+  SENT:     { bg: 'bg-[color:var(--primary-100)]', text: 'text-[color:var(--primary-700)]'  },
   VIEWED:   { bg: 'bg-yellow-100 dark:bg-yellow-900/30', text: 'text-yellow-700 dark:text-yellow-300' },
   ACCEPTED: { bg: 'bg-green-100 dark:bg-green-900/30',   text: 'text-green-700 dark:text-green-300'  },
   REJECTED: { bg: 'bg-red-100 dark:bg-red-900/30',   text: 'text-red-700 dark:text-red-300'   },

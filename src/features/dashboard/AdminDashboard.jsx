@@ -49,7 +49,7 @@ const MOCK_SYSTEM = [
 
 const ROLE_COLORS = {
   PATIENT:              { bg: '#f0fdf4', color: '#16a34a', label: 'Patient' },
-  RELATIVE:             { bg: '#eff6ff', color: '#2563eb', label: 'Relative' },
+  RELATIVE:             { bg: '#f0f6f8', color: '#4a7a8a', label: 'Relative' },
   RESIDENTIAL_PROVIDER: { bg: '#fef3c7', color: '#d97706', label: 'Residential' },
   AMBULATORY_PROVIDER:  { bg: '#fdf2f8', color: '#9333ea', label: 'Ambulatory' },
   ADMIN:                { bg: '#fef2f2', color: '#dc2626', label: 'Admin' },
@@ -60,7 +60,7 @@ function EventBar({ label, value, max }) {
   const pct = Math.round((value / max) * 100);
   const colors = {
     'profile.created': 'var(--primary-500)',
-    'match.calculated': '#3b82f6',
+    'match.calculated': '#5A8FA0',
     'offer.sent': '#f59e0b',
     'offer.accepted': '#10b981',
   };
@@ -84,7 +84,7 @@ function EventBar({ label, value, max }) {
 function UserBreakdownDonut() {
   const segments = [
     { label: 'Patients',   pct: 52, color: '#22c55e' },
-    { label: 'Relatives',  pct: 18, color: '#3b82f6' },
+    { label: 'Relatives',  pct: 18, color: '#5A8FA0' },
     { label: 'Residential',pct: 17, color: '#f59e0b' },
     { label: 'Ambulatory', pct: 13, color: '#a855f7' },
   ];
@@ -378,7 +378,7 @@ export default function AdminDashboard() {
             <div className="flex flex-col gap-2">
               {[
                 { to: '/users',        icon: Users,     label: 'Manage Users',      color: 'var(--primary-600)' },
-                { to: '/analytics',    icon: BarChart3, label: 'Analytics Report',  color: '#2563eb'             },
+                { to: '/analytics',    icon: BarChart3, label: 'Analytics Report',  color: '#4a7a8a'             },
                 { to: '/subscription', icon: CreditCard, label: 'Subscriptions',    color: '#d97706'             },
               ].map((item) => (
                 <Link

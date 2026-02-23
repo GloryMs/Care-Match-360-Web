@@ -5,7 +5,7 @@ export function StatCard({ icon: Icon, label, value, sub, color = 'primary', tre
   const colorMap = {
     primary: { bg: 'var(--primary-100)', icon: 'var(--primary-600)' },
     green:   { bg: '#dcfce7', icon: '#16a34a' },
-    blue:    { bg: '#dbeafe', icon: '#2563eb' },
+    blue:    { bg: '#d9ecf1', icon: '#4a7a8a' },
     amber:   { bg: '#fef3c7', icon: '#d97706' },
     red:     { bg: '#fee2e2', icon: '#dc2626' },
     purple:  { bg: '#ede9fe', icon: '#7c3aed' },

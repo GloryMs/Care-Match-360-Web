@@ -14,7 +14,7 @@ const MOCK_OFFERS = [
 
 const STATUS_CONFIG = {
   DRAFT:    { icon: Clock,        color:'#6b7280', bg:'#f3f4f6', label:'Draft'    },
-  SENT:     { icon: Bell,         color:'#2563eb', bg:'#eff6ff', label:'Received' },
+  SENT:     { icon: Bell,         color:'#4a7a8a', bg:'#f0f6f8', label:'Received' },
   VIEWED:   { icon: Activity,     color:'#d97706', bg:'#fffbeb', label:'Viewed'   },
   ACCEPTED: { icon: CheckCircle2, color:'#16a34a', bg:'#f0fdf4', label:'Accepted' },
   REJECTED: { icon: XCircle,      color:'#dc2626', bg:'#fef2f2', label:'Rejected' },
