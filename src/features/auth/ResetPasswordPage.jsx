@@ -5,21 +5,22 @@ import { useTranslation }                from 'react-i18next';
 import { useForm }                       from 'react-hook-form';
 import { Lock, Eye, EyeOff, CheckCircle2, XCircle } from 'lucide-react';
 
-import AuthLayout from '../../components/layout/AuthLayout';
-import Input      from '../../components/common/Input';
-import Button     from '../../components/common/Button';
-import { useToast } from '../../hooks/useToast';
+import AuthLayout    from '../../components/layout/AuthLayout';
+import Input         from '../../components/common/Input';
+import Button        from '../../components/common/Button';
+import { useToast }  from '../../hooks/useToast';
+import { authAPI }   from '../../api/identityService';
 
 export default function ResetPasswordPage() {
-  const { t }            = useTranslation();
-  const toast            = useToast();
-  const [params]         = useSearchParams();
-  const token            = params.get('token');
+  const { t }    = useTranslation();
+  const toast    = useToast();
+  const [params] = useSearchParams();
+  const token    = params.get('token');
 
-  const [showPass, setShowPass]   = useState(false);
-  const [showConf, setShowConf]   = useState(false);
-  const [loading,  setLoading]    = useState(false);
-  const [success,  setSuccess]    = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [showConf, setShowConf] = useState(false);
+  const [loading,  setLoading]  = useState(false);
+  const [success,  setSuccess]  = useState(false);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm({
     defaultValues: { password: '', confirmPassword: '' },
@@ -43,10 +44,16 @@ export default function ResetPasswordPage() {
 
   const onSubmit = async ({ password: newPassword }) => {
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1000));
-    setLoading(false);
-    setSuccess(true);
-    toast.success(t('auth.reset.success'));
+    try {
+      await authAPI.resetPassword({ token, newPassword });
+      setSuccess(true);
+      toast.success(t('auth.reset.success'));
+    } catch (err) {
+      const msg = err.response?.data?.error?.message || t('auth.reset.invalidToken');
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -80,7 +87,7 @@ export default function ResetPasswordPage() {
                   </button>
                 }
                 {...register('password', {
-                  required: t('auth.errors.required'),
+                  required:  t('auth.errors.required'),
                   minLength: { value: 8, message: t('auth.errors.weakPassword') },
                 })}
               />

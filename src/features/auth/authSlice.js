@@ -1,54 +1,48 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
-// ─── Mock API (replace with real axios calls once backend is running) ──────────
-const mockDelay = (ms = 800) => new Promise(r => setTimeout(r, ms));
-
-const MOCK_USERS = {
-  'patient@test.com':  { id: 'u1', email: 'patient@test.com',  role: 'PATIENT',               isVerified: true,  isActive: true, twoFactorEnabled: false },
-  'relative@test.com': { id: 'u2', email: 'relative@test.com', role: 'RELATIVE',               isVerified: true,  isActive: true, twoFactorEnabled: false },
-  'res@test.com':      { id: 'u3', email: 'res@test.com',       role: 'RESIDENTIAL_PROVIDER',  isVerified: true,  isActive: true, twoFactorEnabled: false },
-  'amb@test.com':      { id: 'u4', email: 'amb@test.com',       role: 'AMBULATORY_PROVIDER',   isVerified: true,  isActive: true, twoFactorEnabled: false },
-  'admin@test.com':    { id: 'u5', email: 'admin@test.com',     role: 'ADMIN',                 isVerified: true,  isActive: true, twoFactorEnabled: false },
-  'super@test.com':    { id: 'u6', email: 'super@test.com',     role: 'SUPER_ADMIN',           isVerified: true,  isActive: true, twoFactorEnabled: false },
-};
+import { authAPI } from '../../api/identityService';
 
 // ─── Thunks ───────────────────────────────────────────────────────────────────
 export const loginThunk = createAsyncThunk(
   'auth/login',
-  async ({ email, password }, { rejectWithValue }) => {
-    await mockDelay();
-    const user = MOCK_USERS[email];
-    if (!user || password.length < 4) {
-      return rejectWithValue({ message: 'auth.errors.invalidCredentials' });
+  async ({ email, password, twoFactorCode }, { rejectWithValue }) => {
+    try {
+      const payload = { email, password };
+      if (twoFactorCode) payload.twoFactorCode = twoFactorCode;
+      const res = await authAPI.login(payload);
+      const { accessToken, refreshToken, user } = res.data.data;
+      return { accessToken, refreshToken, user };
+    } catch (err) {
+      const msg =
+        err.response?.data?.error?.message || 'auth.errors.invalidCredentials';
+      return rejectWithValue({ message: msg });
     }
-    return {
-      accessToken:  'mock-access-token-' + Date.now(),
-      refreshToken: 'mock-refresh-token-' + Date.now(),
-      user,
-    };
   }
 );
 
 export const registerThunk = createAsyncThunk(
   'auth/register',
   async ({ email, password, role }, { rejectWithValue }) => {
-    await mockDelay();
-    if (MOCK_USERS[email]) {
-      return rejectWithValue({ message: 'auth.errors.emailTaken' });
+    try {
+      const res = await authAPI.register({ email, password, role });
+      return { email: res.data.data.email, role: res.data.data.role };
+    } catch (err) {
+      const msg =
+        err.response?.data?.error?.message || 'auth.errors.emailTaken';
+      return rejectWithValue({ message: msg });
     }
-    // In real app: call POST /auth/register
-    return { email, role };
   }
 );
 
-export const refreshTokenThunk = createAsyncThunk(
+// Named refreshAccessToken so axiosInstances.js can import it correctly
+export const refreshAccessToken = createAsyncThunk(
   'auth/refresh',
   async (_, { getState, rejectWithValue }) => {
     try {
-      await mockDelay(200);
       const { refreshToken } = getState().auth;
       if (!refreshToken) throw new Error('No refresh token');
-      return { accessToken: 'mock-access-token-' + Date.now(), refreshToken };
+      const res = await authAPI.refreshToken(refreshToken);
+      const { accessToken, refreshToken: newRefreshToken } = res.data.data;
+      return { accessToken, refreshToken: newRefreshToken };
     } catch (e) {
       return rejectWithValue({ message: e.message });
     }
@@ -77,12 +71,12 @@ const clear = () => {
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user:         load('cm360_user'),
-    accessToken:  load('cm360_access_token', null) ?? localStorage.getItem('cm360_access_token'),
-    refreshToken: localStorage.getItem('cm360_refresh_token'),
-    loading:      false,
-    error:        null,
-    registered:   false,   // flag: show verify-email screen
+    user:            load('cm360_user'),
+    accessToken:     localStorage.getItem('cm360_access_token'),
+    refreshToken:    localStorage.getItem('cm360_refresh_token'),
+    loading:         false,
+    error:           null,
+    registered:      false,
     registeredEmail: null,
   },
   reducers: {
@@ -131,13 +125,13 @@ const authSlice = createSlice({
 
     // Refresh
     builder
-      .addCase(refreshTokenThunk.fulfilled, (s, { payload }) => {
+      .addCase(refreshAccessToken.fulfilled, (s, { payload }) => {
         s.accessToken  = payload.accessToken;
         s.refreshToken = payload.refreshToken;
         localStorage.setItem('cm360_access_token',  payload.accessToken);
         localStorage.setItem('cm360_refresh_token', payload.refreshToken);
       })
-      .addCase(refreshTokenThunk.rejected, (s) => {
+      .addCase(refreshAccessToken.rejected, (s) => {
         s.user = null; s.accessToken = null; s.refreshToken = null;
         clear();
       });

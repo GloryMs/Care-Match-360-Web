@@ -4,43 +4,45 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation }         from 'react-i18next';
 import { MailCheck, RefreshCw, CheckCircle2, XCircle, ArrowLeft } from 'lucide-react';
 
-import AuthLayout from '../../components/layout/AuthLayout';
-import Button     from '../../components/common/Button';
-import { useToast } from '../../hooks/useToast';
+import AuthLayout    from '../../components/layout/AuthLayout';
+import Button        from '../../components/common/Button';
+import { useToast }  from '../../hooks/useToast';
+import { authAPI }   from '../../api/identityService';
 
 export default function VerifyEmailPage() {
   const { t }                   = useTranslation();
   const toast                   = useToast();
   const [params]                = useSearchParams();
 
-  const email   = params.get('email');
-  const token   = params.get('token');
+  const email = params.get('email');
+  const token = params.get('token');
 
-  const [status, setStatus]         = useState('pending');   // pending | verifying | verified | error
-  const [resending, setResending]   = useState(false);
-  const [resent,    setResent]       = useState(false);
+  const [status, setStatus]       = useState('pending');   // pending | verifying | verified | error
+  const [resending, setResending] = useState(false);
+  const [resent,    setResent]    = useState(false);
 
-  // If token in URL → simulate verification
+  // If token in URL → call real verify-email endpoint
   useEffect(() => {
-    if (token) {
-      setStatus('verifying');
-      setTimeout(() => {
-        // Mock: token "valid" verifies, anything else errors
-        if (token !== 'invalid') {
-          setStatus('verified');
-        } else {
-          setStatus('error');
-        }
-      }, 1500);
-    }
+    if (!token) return;
+    setStatus('verifying');
+    authAPI.verifyEmail(token)
+      .then(() => setStatus('verified'))
+      .catch(() => setStatus('error'));
   }, [token]);
 
   const handleResend = async () => {
+    if (!email) return;
     setResending(true);
-    await new Promise(r => setTimeout(r, 1000));
-    setResending(false);
-    setResent(true);
-    toast.success(t('auth.verify.resendSuccess'));
+    try {
+      await authAPI.resendVerification(decodeURIComponent(email));
+      setResent(true);
+      toast.success(t('auth.verify.resendSuccess'));
+    } catch (err) {
+      const msg = err.response?.data?.error?.message || t('auth.verify.resendSuccess');
+      toast.error(msg);
+    } finally {
+      setResending(false);
+    }
   };
 
   return (

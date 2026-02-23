@@ -137,15 +137,6 @@ export default function LoginPage() {
           </Link>
         </p>
 
-        {/* Demo credentials hint */}
-        <div
-          className="mt-4 p-3 rounded-lg text-xs"
-          style={{ background: 'var(--bg-subtle)', color: 'var(--text-muted)' }}
-        >
-          <p className="font-semibold mb-1">Demo accounts (password: any 4+ chars):</p>
-          <p>patient@test.com · relative@test.com · res@test.com</p>
-          <p>amb@test.com · admin@test.com · super@test.com</p>
-        </div>
       </div>
     </AuthLayout>
   );

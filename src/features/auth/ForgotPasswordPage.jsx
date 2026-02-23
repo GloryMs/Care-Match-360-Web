@@ -5,16 +5,17 @@ import { useTranslation }        from 'react-i18next';
 import { useForm }               from 'react-hook-form';
 import { Mail, ArrowLeft, Send, CheckCircle2 } from 'lucide-react';
 
-import AuthLayout from '../../components/layout/AuthLayout';
-import Input      from '../../components/common/Input';
-import Button     from '../../components/common/Button';
-import { useToast } from '../../hooks/useToast';
+import AuthLayout    from '../../components/layout/AuthLayout';
+import Input         from '../../components/common/Input';
+import Button        from '../../components/common/Button';
+import { useToast }  from '../../hooks/useToast';
+import { authAPI }   from '../../api/identityService';
 
 export default function ForgotPasswordPage() {
   const { t }    = useTranslation();
   const toast    = useToast();
-  const [sent,   setSent]    = useState(false);
-  const [loading,setLoading] = useState(false);
+  const [sent,    setSent]    = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: { email: '' },
@@ -22,10 +23,16 @@ export default function ForgotPasswordPage() {
 
   const onSubmit = async ({ email }) => {
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1000)); // Mock API call
-    setLoading(false);
-    setSent(true);
-    toast.info(t('auth.forgot.sent'));
+    try {
+      await authAPI.forgotPassword(email);
+      setSent(true);
+      toast.info(t('auth.forgot.sent'));
+    } catch (err) {
+      const msg = err.response?.data?.error?.message || t('auth.errors.invalidEmail');
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
