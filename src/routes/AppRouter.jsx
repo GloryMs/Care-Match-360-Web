@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 // Layouts
-import Layout      from '../components/layout/Layout';
+import Layout       from '../components/layout/Layout';
 import PublicLayout from '../components/layout/PublicLayout';
 
 // Landing
@@ -16,15 +16,27 @@ import ForgotPasswordPage from '../features/auth/ForgotPasswordPage';
 import ResetPasswordPage  from '../features/auth/ResetPasswordPage';
 import VerifyEmailPage    from '../features/auth/VerifyEmailPage';
 
-// App pages
+// App pages — shared
 import DashboardPage      from '../features/dashboard/DashboardPage';
-import PatientProfilePage from '../features/profile/PatientProfilePage';
-import ProviderProfilePage from '../features/profile/ProviderProfilePage';
-import MatchesPage        from '../features/matching/MatchesPage';
-import OffersPage         from '../features/matching/OffersPage';
-import SubscriptionPage   from '../features/billing/SubscriptionPage';
-import InvoicesPage       from '../features/billing/InvoicesPage';
 import NotificationsPage  from '../features/notifications/NotificationsPage';
+
+// Profile pages
+import PatientProfilePage  from '../features/profile/PatientProfilePage';
+import ProviderProfilePage from '../features/profile/ProviderProfilePage';
+
+// Patient / Relative pages
+import MatchesPage       from '../features/matching/MatchesPage';
+import OffersPage        from '../features/matching/OffersPage';
+import SubscriptionPage  from '../features/billing/SubscriptionPage';
+import InvoicesPage      from '../features/billing/InvoicesPage';
+
+// Provider pages (real API)
+import ProviderMatchesPage      from '../features/matching/ProviderMatchesPage';
+import ProviderOffersPage       from '../features/matching/ProviderOffersPage';
+import ProviderSubscriptionPage from '../features/billing/ProviderSubscriptionPage';
+import ProviderInvoicesPage     from '../features/billing/ProviderInvoicesPage';
+
+const PROVIDER_ROLES = ['RESIDENTIAL_PROVIDER', 'AMBULATORY_PROVIDER'];
 
 function ProtectedRoute({ children }) {
   const token = useSelector((s) => s.auth.accessToken);
@@ -33,8 +45,27 @@ function ProtectedRoute({ children }) {
 
 function ProfileRouter() {
   const role = useSelector((s) => s.auth.user?.role);
-  const isProvider = role === 'RESIDENTIAL_PROVIDER' || role === 'AMBULATORY_PROVIDER';
-  return isProvider ? <ProviderProfilePage /> : <PatientProfilePage />;
+  return PROVIDER_ROLES.includes(role) ? <ProviderProfilePage /> : <PatientProfilePage />;
+}
+
+function MatchesRouter() {
+  const role = useSelector((s) => s.auth.user?.role);
+  return PROVIDER_ROLES.includes(role) ? <ProviderMatchesPage /> : <MatchesPage />;
+}
+
+function OffersRouter() {
+  const role = useSelector((s) => s.auth.user?.role);
+  return PROVIDER_ROLES.includes(role) ? <ProviderOffersPage /> : <OffersPage />;
+}
+
+function SubscriptionRouter() {
+  const role = useSelector((s) => s.auth.user?.role);
+  return PROVIDER_ROLES.includes(role) ? <ProviderSubscriptionPage /> : <SubscriptionPage />;
+}
+
+function InvoicesRouter() {
+  const role = useSelector((s) => s.auth.user?.role);
+  return PROVIDER_ROLES.includes(role) ? <ProviderInvoicesPage /> : <InvoicesPage />;
 }
 
 export default function AppRouter() {
@@ -56,17 +87,20 @@ export default function AppRouter() {
 
         {/* Protected app routes */}
         <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-          <Route path="/dashboard"      element={<DashboardPage />} />
-          <Route path="/profile"        element={<ProfileRouter />} />
-          <Route path="/matches"        element={<MatchesPage />} />
-          <Route path="/offers"         element={<OffersPage />} />
-          <Route path="/subscription"   element={<SubscriptionPage />} />
-          <Route path="/invoices"       element={<InvoicesPage />} />
-          <Route path="/notifications"  element={<NotificationsPage />} />
-          {/* Placeholder for admin routes */}
-          <Route path="/users"          element={<div className="p-8 font-serif text-xl" style={{color:'var(--text-main)'}}>Users Management — Coming Soon</div>} />
-          <Route path="/analytics"      element={<div className="p-8 font-serif text-xl" style={{color:'var(--text-main)'}}>Analytics — Coming Soon</div>} />
-          <Route path="/settings"       element={<div className="p-8 font-serif text-xl" style={{color:'var(--text-main)'}}>Settings — Coming Soon</div>} />
+          <Route path="/dashboard"     element={<DashboardPage />} />
+          <Route path="/profile"       element={<ProfileRouter />} />
+          <Route path="/matches"       element={<MatchesRouter />} />
+          <Route path="/offers"        element={<OffersRouter />} />
+          <Route path="/subscription"  element={<SubscriptionRouter />} />
+          <Route path="/invoices"      element={<InvoicesRouter />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          {/* Admin placeholders */}
+          <Route path="/users"
+            element={<div className="p-8 font-serif text-xl" style={{color:'var(--text-main)'}}>Users Management — Coming Soon</div>} />
+          <Route path="/analytics"
+            element={<div className="p-8 font-serif text-xl" style={{color:'var(--text-main)'}}>Analytics — Coming Soon</div>} />
+          <Route path="/settings"
+            element={<div className="p-8 font-serif text-xl" style={{color:'var(--text-main)'}}>Settings — Coming Soon</div>} />
         </Route>
 
         {/* Fallback */}
