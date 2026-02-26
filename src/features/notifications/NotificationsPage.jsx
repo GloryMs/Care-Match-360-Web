@@ -1,13 +1,13 @@
 // src/features/notifications/NotificationsPage.jsx
 // Real API — replaces mock data. Works for all roles.
 import { useState, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Bell, BellOff, Check, CheckCheck, Loader2,
   AlertCircle, ChevronLeft, ChevronRight,
   Mail, Smartphone, MessageSquare, RefreshCw,
 } from 'lucide-react';
 import { notificationAPI } from '../../api/notificationService';
-import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 
 // ─── Type config ──────────────────────────────────────────────────────────────
@@ -68,8 +68,8 @@ function NotifCard({ notif, onMarkRead }) {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function NotificationsPage() {
-  const { user } = useAuth();
-  const toast    = useToast();
+  const profileId = useSelector(s => s.auth.profileId);
+  const toast     = useToast();
 
   const [notifications, setNotifications] = useState([]);
   const [unreadCount,   setUnreadCount]   = useState(0);
@@ -82,14 +82,13 @@ export default function NotificationsPage() {
   const [markingAll,    setMarkingAll]    = useState(false);
 
   const PAGE_SIZE = 20;
-  const userId = user?.id;
 
   const loadNotifications = useCallback(async () => {
-    if (!userId) return;
+    if (!profileId) return;
     setLoading(true);
     setError(null);
     try {
-      const res  = await notificationAPI.getUserNotifications(userId, page, PAGE_SIZE);
+      const res  = await notificationAPI.getUserNotifications(profileId, page, PAGE_SIZE);
       const data = res.data.data;
       const content = data.content ?? data;
       setNotifications(content);
@@ -100,15 +99,15 @@ export default function NotificationsPage() {
     } finally {
       setLoading(false);
     }
-  }, [userId, page]);
+  }, [profileId, page]);
 
   const loadUnreadCount = useCallback(async () => {
-    if (!userId) return;
+    if (!profileId) return;
     try {
-      const res = await notificationAPI.getUnreadCount(userId);
+      const res = await notificationAPI.getUnreadCount(profileId);
       setUnreadCount(res.data.data ?? 0);
     } catch { /* ignore */ }
-  }, [userId]);
+  }, [profileId]);
 
   useEffect(() => {
     loadNotifications();
@@ -128,10 +127,10 @@ export default function NotificationsPage() {
   };
 
   const handleMarkAllRead = async () => {
-    if (!userId) return;
+    if (!profileId) return;
     setMarkingAll(true);
     try {
-      await notificationAPI.markAllRead(userId);
+      await notificationAPI.markAllRead(profileId);
       setNotifications(prev => prev.map(n => ({ ...n, isRead: true, readAt: new Date().toISOString() })));
       setUnreadCount(0);
       toast.success('All notifications marked as read');

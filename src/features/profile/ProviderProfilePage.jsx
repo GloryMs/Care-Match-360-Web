@@ -1,10 +1,12 @@
 // src/features/profile/ProviderProfilePage.jsx
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { Save, Upload, Trash2, FileText, Loader2, Eye, EyeOff } from 'lucide-react';
 import { providerProfileAPI } from '../../api/profileService';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
+import { setProfileId } from '../../features/auth/authSlice';
 
 const RES_TABS = ['Facility Info', 'Capacity & Rooms', 'Specializations'];
 const AMB_TABS = ['Business Info', 'Service Area', 'Availability'];
@@ -68,6 +70,7 @@ const serializeRoomTypes = (roomCounts) =>
   );
 
 const defaultForm = {
+  email:               '',   // read-only — pre-filled by backend
   facilityName:        '',
   address:             '',
   latitude:            '',
@@ -86,21 +89,22 @@ export default function ProviderProfilePage() {
   const { t }           = useTranslation();
   const { user }        = useAuth();
   const toast           = useToast();
+  const dispatch        = useDispatch();
   const fileRef         = useRef();
 
   const isResidential   = user?.role === 'RESIDENTIAL_PROVIDER';
   const providerType    = isResidential ? 'RESIDENTIAL' : 'AMBULATORY';
   const TABS            = isResidential ? RES_TABS : AMB_TABS;
 
-  const [tab,         setTab]         = useState(TABS[0]);
-  const [form,        setForm]        = useState(defaultForm);
-  const [roomCounts,  setRoomCounts]  = useState({});           // { SINGLE: '3', ... }
-  const [avail,       setAvail]       = useState(defaultAvailability);
-  const [profileId,   setProfileId]   = useState(null);
-  const [loading,     setLoading]     = useState(true);
-  const [saving,      setSaving]      = useState(false);
-  const [documents,   setDocuments]   = useState([]);
-  const [uploading,   setUploading]   = useState(false);
+  const [tab,            setTab]            = useState(TABS[0]);
+  const [form,           setForm]           = useState(defaultForm);
+  const [roomCounts,     setRoomCounts]     = useState({});           // { SINGLE: '3', ... }
+  const [avail,          setAvail]          = useState(defaultAvailability);
+  const [profileId,      setLocalProfileId] = useState(null);
+  const [loading,        setLoading]        = useState(true);
+  const [saving,         setSaving]         = useState(false);
+  const [documents,      setDocuments]      = useState([]);
+  const [uploading,      setUploading]      = useState(false);
 
   useEffect(() => { loadProfile(); }, []);
 
@@ -110,8 +114,10 @@ export default function ProviderProfilePage() {
     try {
       const res = await providerProfileAPI.getMyProfile();
       const d   = res.data.data;
-      setProfileId(d.id);
+      setLocalProfileId(d.id);
+      dispatch(setProfileId(d.id));
       setForm({
+        email:               d.email              ?? '',
         facilityName:        d.facilityName        ?? '',
         address:             d.address             ?? '',
         latitude:            d.latitude            ?? '',
@@ -155,6 +161,7 @@ export default function ProviderProfilePage() {
 
     setSaving(true);
     try {
+      // email is managed by the identity service — never send it in the update payload
       const payload = {
         facilityName:        form.facilityName,
         providerType,
@@ -173,14 +180,13 @@ export default function ProviderProfilePage() {
         isVisible:           form.isVisible,
       };
 
-      if (profileId) {
-        await providerProfileAPI.update(payload);
-        toast.success('Profile updated successfully');
-      } else {
-        const res = await providerProfileAPI.create(payload);
-        setProfileId(res.data.data.id);
-        toast.success('Profile created successfully');
+      const res = await providerProfileAPI.update(payload);
+      const savedId = res.data.data?.id;
+      if (savedId && !profileId) {
+        setLocalProfileId(savedId);
+        dispatch(setProfileId(savedId));
       }
+      toast.success('Profile saved successfully');
     } catch (err) {
       const msg = err.response?.data?.error?.message || 'Failed to save profile';
       toast.error(msg);
@@ -310,7 +316,7 @@ export default function ProviderProfilePage() {
               {isResidential ? 'Residential' : 'Ambulatory'} Provider Profile
             </h1>
             <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
-              {profileId ? 'Complete your profile to attract the best patient matches' : 'Create your provider profile to start receiving matches'}
+              Complete your profile to attract the best patient matches
             </p>
           </div>
           {profileId && (
@@ -351,6 +357,15 @@ export default function ProviderProfilePage() {
         {isResidential && tab === 'Facility Info' && (
           <div className="flex flex-col gap-5">
             <h2 className="font-serif font-bold text-lg" style={{ color: 'var(--text-main)' }}>Facility Information</h2>
+
+            <div>
+              <label className="form-label">Email</label>
+              <input className="form-input opacity-70 cursor-not-allowed" readOnly disabled
+                value={form.email} placeholder="Your registered email" />
+              <p className="text-xs mt-1" style={{ color: 'var(--text-faint)' }}>
+                Email is managed by your account and cannot be changed here.
+              </p>
+            </div>
 
             <div>
               <label className="form-label">Facility Name</label>
@@ -438,6 +453,15 @@ export default function ProviderProfilePage() {
         {!isResidential && tab === 'Business Info' && (
           <div className="flex flex-col gap-5">
             <h2 className="font-serif font-bold text-lg" style={{ color: 'var(--text-main)' }}>Business Information</h2>
+
+            <div>
+              <label className="form-label">Email</label>
+              <input className="form-input opacity-70 cursor-not-allowed" readOnly disabled
+                value={form.email} placeholder="Your registered email" />
+              <p className="text-xs mt-1" style={{ color: 'var(--text-faint)' }}>
+                Email is managed by your account and cannot be changed here.
+              </p>
+            </div>
 
             <div>
               <label className="form-label">Business Name</label>
@@ -531,7 +555,7 @@ export default function ProviderProfilePage() {
             {saving
               ? <Loader2 size={15} className="animate-spin" />
               : <Save size={15} />}
-            {saving ? 'Saving...' : profileId ? t('common.save') : 'Create Profile'}
+            {saving ? 'Saving...' : t('common.save')}
           </button>
         </div>
       </div>

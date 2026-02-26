@@ -6,8 +6,10 @@ import {
   XCircle, AlertCircle, Loader2, ChevronLeft, ChevronRight,
   RefreshCw, Bell, Filter, Plus,
 } from 'lucide-react';
+import { useDispatch }        from 'react-redux';
 import { offerAPI }           from '../../api/matchService';
 import { providerProfileAPI } from '../../api/profileService';
+import { setProfileId }       from '../auth/authSlice';
 import { useAuth  } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 
@@ -265,7 +267,8 @@ function OfferCard({ offer, onSend, onViewHistory, sendingId }) {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function ProviderOffersPage() {
   const { user } = useAuth();
-  const toast    = useToast();
+  const toast     = useToast();
+  const dispatch  = useDispatch();
 
   const [providerId,    setProviderId]    = useState(null);
   const [offers,        setOffers]        = useState([]);
@@ -283,15 +286,20 @@ export default function ProviderOffersPage() {
 
   useEffect(() => {
     providerProfileAPI.getMyProfile()
-      .then(r => setProviderId(r.data.data.id))
+      .then(r => {
+        const id = r.data.data.id;
+        setProviderId(id);
+        dispatch(setProfileId(id));
+      })
       .catch(() => setError('Failed to load provider profile'));
-  }, []);
+  }, [dispatch]);
 
   const loadOffers = useCallback(async () => {
     if (!providerId) return;
     setLoading(true);
     setError(null);
     try {
+      console.log('Loading offers for provider: ', providerId);
       const res  = await offerAPI.getProviderOffers(providerId, page, PAGE_SIZE);
       const data = res.data.data;
       const content = data.content ?? data;

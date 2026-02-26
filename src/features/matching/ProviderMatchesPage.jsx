@@ -8,9 +8,11 @@ import {
   Star, Users, Clock, Filter, SortAsc, SortDesc,
   TrendingUp, Eye,
 } from 'lucide-react';
+import { useDispatch }         from 'react-redux';
 import { matchAPI } from '../../api/matchService';
 import { offerAPI  } from '../../api/matchService';
 import { providerProfileAPI } from '../../api/profileService';
+import { setProfileId }       from '../auth/authSlice';
 import { useAuth  } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 
@@ -260,6 +262,7 @@ function SendOfferModal({ match, onClose, onSent }) {
 export default function ProviderMatchesPage() {
   const { user }  = useAuth();
   const toast     = useToast();
+  const dispatch  = useDispatch();
 
   const [providerId, setProviderId] = useState(null);
   const [matches,    setMatches]    = useState([]);
@@ -278,9 +281,13 @@ export default function ProviderMatchesPage() {
   // Load provider profile first to get providerId
   useEffect(() => {
     providerProfileAPI.getMyProfile()
-      .then(r => setProviderId(r.data.data.id))
+      .then(r => {
+        const id = r.data.data.id;
+        setProviderId(id);
+        dispatch(setProfileId(id));
+      })
       .catch(() => setError('Failed to load your provider profile'));
-  }, []);
+  }, [dispatch]);
 
   const loadMatches = useCallback(async () => {
     if (!providerId) return;

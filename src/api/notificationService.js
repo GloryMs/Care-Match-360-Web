@@ -9,10 +9,8 @@ const instance = axios.create({ baseURL: BASE });
 
 instance.interceptors.request.use((config) => {
   const state = store.getState();
-  const token  = state.auth?.accessToken;
-  const userId = state.auth?.user?.id;
-  if (token)  config.headers['Authorization'] = `Bearer ${token}`;
-  if (userId) config.headers['X-User-Id']     = userId;
+  const token = state.auth?.accessToken;
+  if (token) config.headers['Authorization'] = `Bearer ${token}`;
   return config;
 });
 
@@ -23,30 +21,30 @@ export const notificationAPI = {
   send: (payload) =>
     instance.post('/notifications', payload),
 
-  /** Get all notifications for a user (paginated) */
-  getUserNotifications: (userId, page = 0, size = 20) =>
-    instance.get(`/notifications/user/${userId}`, { params: { page, size } }),
+  /** Get all notifications for a recipient (paginated) */
+  getUserNotifications: (recipientId, page = 0, size = 20) =>
+    instance.get(`/notifications/${recipientId}`, { params: { page, size } }),
 
-  /** Get unread notifications for a user */
-  getUnreadNotifications: (userId) =>
-    instance.get(`/notifications/user/${userId}/unread`),
+  /** Get unread notifications for a recipient */
+  getUnreadNotifications: (recipientId) =>
+    instance.get(`/notifications/${recipientId}/unread`),
 
-  /** Get unread count for a user */
-  getUnreadCount: (userId) =>
-    instance.get(`/notifications/user/${userId}/unread/count`),
+  /** Get unread count for a recipient */
+  getUnreadCount: (recipientId) =>
+    instance.get(`/notifications/${recipientId}/unread/count`),
 
   /** Mark a notification as read */
   markRead: (notificationId) =>
     instance.put(`/notifications/${notificationId}/read`),
 
-  /** Mark ALL notifications for a user as read */
-  markAllRead: (userId) =>
-    instance.put(`/notifications/user/${userId}/read-all`),
+  /** Mark ALL notifications for a recipient as read */
+  markAllRead: (recipientId) =>
+    instance.put(`/notifications/${recipientId}/read-all`),
 
   // ── Analytics ──────────────────────────────────────────────────────────────
-  /** Get event logs for a user (paginated) */
-  getUserEvents: (userId, page = 0, size = 20) =>
-    instance.get(`/analytics/events/user/${userId}`, { params: { page, size } }),
+  /** Get event logs for a profile (paginated) */
+  getUserEvents: (profileId, page = 0, size = 20) =>
+    instance.get(`/analytics/events/profile/${profileId}`, { params: { page, size } }),
 
   /** Get event logs by type */
   getEventsByType: (eventType) =>

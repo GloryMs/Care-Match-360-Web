@@ -9,10 +9,8 @@ const instance = axios.create({ baseURL: BASE });
 
 instance.interceptors.request.use((config) => {
   const state = store.getState();
-  const token  = state.auth?.accessToken;
-  const userId = state.auth?.user?.id;
-  if (token)  config.headers['Authorization'] = `Bearer ${token}`;
-  if (userId) config.headers['X-User-Id']     = userId;
+  const token = state.auth?.accessToken;
+  if (token) config.headers['Authorization'] = `Bearer ${token}`;
   return config;
 });
 

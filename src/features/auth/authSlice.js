@@ -65,6 +65,7 @@ const clear = () => {
   localStorage.removeItem('cm360_user');
   localStorage.removeItem('cm360_access_token');
   localStorage.removeItem('cm360_refresh_token');
+  localStorage.removeItem('cm360_profile_id');
 };
 
 // ─── Slice ────────────────────────────────────────────────────────────────────
@@ -74,6 +75,7 @@ const authSlice = createSlice({
     user:            load('cm360_user'),
     accessToken:     localStorage.getItem('cm360_access_token'),
     refreshToken:    localStorage.getItem('cm360_refresh_token'),
+    profileId:       localStorage.getItem('cm360_profile_id') || null,
     loading:         false,
     error:           null,
     registered:      false,
@@ -84,7 +86,12 @@ const authSlice = createSlice({
       state.user         = null;
       state.accessToken  = null;
       state.refreshToken = null;
+      state.profileId    = null;
       clear();
+    },
+    setProfileId(state, action) {
+      state.profileId = action.payload;
+      localStorage.setItem('cm360_profile_id', action.payload);
     },
     clearError(state) {
       state.error = null;
@@ -138,5 +145,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, clearError, clearRegistered } = authSlice.actions;
+export const { logout, clearError, clearRegistered, setProfileId } = authSlice.actions;
 export default authSlice.reducer;

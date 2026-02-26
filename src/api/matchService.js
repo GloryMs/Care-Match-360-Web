@@ -8,11 +8,19 @@ const BASE = import.meta.env.VITE_MATCH_API_URL || 'http://localhost:8003/api/v1
 const instance = axios.create({ baseURL: BASE });
 
 instance.interceptors.request.use((config) => {
-  const state = store.getState();
-  const token  = state.auth?.accessToken;
-  const userId = state.auth?.user?.id;
-  if (token)  config.headers['Authorization'] = `Bearer ${token}`;
-  if (userId) config.headers['X-User-Id']     = userId;
+  const state     = store.getState();
+  const token     = state.auth?.accessToken;
+  const profileId = state.auth?.profileId;
+  const role      = state.auth?.user?.role;
+  if (token) config.headers['Authorization'] = `Bearer ${token}`;
+  if (profileId) {
+    const isProvider = role === 'RESIDENTIAL_PROVIDER' || role === 'AMBULATORY_PROVIDER';
+    if (isProvider) {
+      config.headers['X-Provider-Id'] = profileId;
+    } else {
+      config.headers['X-Patient-Id'] = profileId;
+    }
+  }
   return config;
 });
 

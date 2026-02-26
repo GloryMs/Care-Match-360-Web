@@ -1,9 +1,11 @@
 // src/features/profile/PatientProfilePage.jsx
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { User, Heart, Shield, Save, Upload, Trash2, FileText, Loader2 } from 'lucide-react';
 import { patientProfileAPI } from '../../api/profileService';
 import { useToast } from '../../hooks/useToast';
+import { setProfileId } from '../../features/auth/authSlice';
 
 const TABS = [
   { id: 'basic',   label: 'Basic Info',   icon: User   },
@@ -23,6 +25,7 @@ const DEFAULT_LIFESTYLE = { mobilityLevel: 'Fully mobile', socialPreference: 'Mo
 const DEFAULT_MEDICAL   = { services: [], notes: '' };
 
 const defaultForm = {
+  email:                '',   // read-only — pre-filled by backend
   age:                  '',
   gender:               'male',
   region:               '',
@@ -37,17 +40,18 @@ const defaultForm = {
 };
 
 export default function PatientProfilePage() {
-  const { t }   = useTranslation();
-  const toast   = useToast();
-  const fileRef = useRef();
+  const { t }    = useTranslation();
+  const toast    = useToast();
+  const dispatch = useDispatch();
+  const fileRef  = useRef();
 
-  const [tab,       setTab]       = useState('basic');
-  const [form,      setForm]      = useState(defaultForm);
-  const [profileId, setProfileId] = useState(null);   // null = create mode
-  const [loading,   setLoading]   = useState(true);
-  const [saving,    setSaving]    = useState(false);
-  const [documents, setDocuments] = useState([]);
-  const [uploading, setUploading] = useState(false);
+  const [tab,            setTab]            = useState('basic');
+  const [form,           setForm]           = useState(defaultForm);
+  const [profileId,      setLocalProfileId] = useState(null);   // null = create mode
+  const [loading,        setLoading]        = useState(true);
+  const [saving,         setSaving]         = useState(false);
+  const [documents,      setDocuments]      = useState([]);
+  const [uploading,      setUploading]      = useState(false);
 
   useEffect(() => { loadProfile(); }, []);
 
@@ -57,8 +61,10 @@ export default function PatientProfilePage() {
     try {
       const res = await patientProfileAPI.getMyProfile();
       const d   = res.data.data;
-      setProfileId(d.id);
+      setLocalProfileId(d.id);
+      dispatch(setProfileId(d.id));
       setForm({
+        email:               d.email              ?? '',
         age:                 d.age                ?? '',
         gender:              d.gender             ?? 'male',
         region:              d.region             ?? '',
@@ -75,7 +81,7 @@ export default function PatientProfilePage() {
       if (err.response?.status !== 404) {
         toast.error('Failed to load profile');
       }
-      // 404 = no profile yet → stay in create mode
+      // 404 = profile not yet initialised (edge case)
     } finally {
       setLoading(false);
     }
@@ -104,21 +110,22 @@ export default function PatientProfilePage() {
 
     setSaving(true);
     try {
+      // email is managed by the identity service — never send it in the update payload
+      const { email: _email, ...rest } = form;
       const payload = {
-        ...form,
+        ...rest,
         age:       Number(form.age),
         latitude:  form.latitude  !== '' ? Number(form.latitude)  : undefined,
         longitude: form.longitude !== '' ? Number(form.longitude) : undefined,
       };
 
-      if (profileId) {
-        await patientProfileAPI.update(payload);
-        toast.success('Profile updated successfully');
-      } else {
-        const res = await patientProfileAPI.create(payload);
-        setProfileId(res.data.data.id);
-        toast.success('Profile created successfully');
+      const res = await patientProfileAPI.update(payload);
+      const savedId = res.data.data?.id;
+      if (savedId && !profileId) {
+        setLocalProfileId(savedId);
+        dispatch(setProfileId(savedId));
       }
+      toast.success('Profile saved successfully');
     } catch (err) {
       const msg = err.response?.data?.error?.message || 'Failed to save profile';
       toast.error(msg);
@@ -202,7 +209,7 @@ export default function PatientProfilePage() {
       <div className="mb-6 animate-fade-in-up">
         <h1 className="font-serif font-bold text-2xl" style={{ color: 'var(--text-main)' }}>Patient Profile</h1>
         <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
-          {profileId ? 'Manage your care profile to get better matches' : 'Create your care profile to start getting matches'}
+          Complete your profile to get the best care provider matches
         </p>
       </div>
 
@@ -229,6 +236,16 @@ export default function PatientProfilePage() {
         {tab === 'basic' && (
           <div className="flex flex-col gap-5">
             <h2 className="font-serif font-bold text-lg" style={{ color: 'var(--text-main)' }}>Basic Information</h2>
+
+            <div>
+              <label className="form-label">Email</label>
+              <input className="form-input opacity-70 cursor-not-allowed" readOnly disabled
+                value={form.email}
+                placeholder="Your registered email" />
+              <p className="text-xs mt-1" style={{ color: 'var(--text-faint)' }}>
+                Email is managed by your account and cannot be changed here.
+              </p>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -424,7 +441,7 @@ export default function PatientProfilePage() {
             {saving
               ? <Loader2 size={15} className="animate-spin" />
               : <Save size={15} />}
-            {saving ? 'Saving...' : profileId ? t('common.save') : 'Create Profile'}
+            {saving ? 'Saving...' : t('common.save')}
           </button>
         </div>
       </div>

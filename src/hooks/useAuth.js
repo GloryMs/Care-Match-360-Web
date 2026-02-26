@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { ADMIN_ROLES, PROVIDER_ROLES, USER_ROLES } from '../utils/constants';
 
 export const useAuth = () => {
-  const { user, accessToken, loading, error, registered, registeredEmail } = useSelector((s) => s.auth);
+  const { user, accessToken, loading, error, registered, registeredEmail, profileId } = useSelector((s) => s.auth);
 
   const isAuthenticated = !!accessToken && !!user;
   const role = user?.role || null;
@@ -15,6 +15,7 @@ export const useAuth = () => {
     error,
     registered,
     registeredEmail,
+    profileId,
     isAuthenticated,
     role,
     isPatient:   role === USER_ROLES.PATIENT,
